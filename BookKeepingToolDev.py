@@ -67,3 +67,17 @@ def doesTableExist(conn, cur, tableName):
     if cur.fetchone()[0] == 0:
         return False
     return True
+
+def exceptionHandlingTest():
+    try:
+        a = int(input("Enter numerator number: "))
+        b = int(input("Enter denominator number: "))
+        print("Result of Division: " + str(a/b))
+    # except block handling division by zero
+    except(ZeroDivisionError):
+        print("You have divided a number by zero, which is not allowed.")
+    finally:
+        print("Code execution Wrap up!")
+    
+    # outside the try-except block
+    print("Will this get printed?")
