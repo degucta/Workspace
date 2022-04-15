@@ -9,7 +9,10 @@ def copy_add_text():
     txt += ', I am the Doctor.'
     xw.Range('B3').value = txt
 
-# database connectivity check test 
+#
+# DESC: database connectivity check test 
+# NOTE: How to return value(s) to caller explicitly needs to be worked out
+#
 def getDatabaseContent():
     #txtQuery = xw.Range('A5').value
     conn = sqlite3.connect('C:/Workspace/testtest.db') # [2022/4/14]: "/" NOT "\"
