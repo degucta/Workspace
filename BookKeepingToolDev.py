@@ -2,6 +2,8 @@
 
 import xlwings as xw
 import sqlite3
+import logging as logger
+
 
 # sample test method 
 def copy_add_text():
@@ -14,6 +16,10 @@ def copy_add_text():
 # NOTE: How to return value(s) to caller explicitly needs to be worked out
 #
 def getDatabaseContent():
+
+    logger.basicConfig(filename='std.log', filemode='a', format='%(asctime)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S', level=logger.INFO)
+    logger.info('getDatabaseContent method invocation started')
+
     #txtQuery = xw.Range('A5').value
     conn = sqlite3.connect('C:/Workspace/testtest.db') # [2022/4/14]: "/" NOT "\"
     curs = conn.cursor()
@@ -51,10 +57,44 @@ def getDatabaseContent():
     conn.close()
 
     # Dump the result back to caller worksheet - is this the only way ?
-    xw.Range('B16').value = txtResult
+    #xw.Range('B16').value = txtResult
  
     return txtResult
+
+## import mysql.connector
+def mysqlDatabaseConnect():
+
+## Now connecting to the database using 'connect()' method
+## it takes 3 required parameters 'host', 'user', 'passwd'
+
+    conn = mysql.connector.connect(
+    host='localhost',
+    user='bookkeeper',
+    password='Uzuki2022!',
+    db='bookkeeper'
+    )
+
+    print(conn.is_connected())
+
+    # カーソル作成
+    cur = conn.cursor()
+    cur.execute("select version()")
+    print(cur.fetchone())
+
+    #cur.execute("use bookkeeper; set @param1 = 0; call simpleproc(@param1); select @param1;")
+    statement = 'call simpleproc(@param1); select @param1;';
     
+    # call stored procedure via "callproc" method - Do NOT use "execute" method
+    args = [0]
+    result_args = cur.callproc('simpleproc', args)
+
+
+    print("Stored procedure execution result is -->> ", result_args[0])
+
+    #print(cur.fetchone())
+    cur.close()
+
+
 def doesTableExist(conn, cur, tableName):
     
     strStatement = """
@@ -80,4 +120,15 @@ def exceptionHandlingTest():
         print("Code execution Wrap up!")
     
     # outside the try-except block
-    print("Will this get printed?")
+    #print("Will this get printed?")
+    print("ここはプリントされるかな")
+
+
+def divisionCalc():
+    a = int(input("Enter numerator number: "))
+    b = int(input("Enter denominator number: "))
+    import decimal
+
+    decimal.getcontext().prec = 100
+    division = decimal.Decimal(a) / decimal.Decimal(b)
+    print(division)
